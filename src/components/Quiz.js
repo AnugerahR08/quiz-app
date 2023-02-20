@@ -38,7 +38,7 @@ const Quiz = () => {
     const restartQuiz = () => {
         window.location.reload();
         setOpen(true);
-        // setTime(300);
+        // setTimeLeft(300);
     };
 
     const tick = () => {
@@ -49,14 +49,41 @@ const Quiz = () => {
         }
     };
 
+    const logOut = () => {
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            text: 'You will be logged out of this account',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes!',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/';
+            }
+        })
+    };
+
     useEffect(() => {
         const timerId = setInterval(() => tick(), 1000);
         return () => clearInterval(timerId);
     });
 
+    useEffect(() => {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                color: 'white',
+                background: '#000000',
+                title: 'Welcome ' + name + ', Have a great time doing it!',
+                showConfirmButton: false,
+                timer: 2000
+            })
+    }, []);
+
     return (
         <Center>
-            <Collapse in={open}>
+            {/* <Collapse in={open}>
                 <Alert action={
                     <IconButton
                         aria-label="close"
@@ -64,17 +91,15 @@ const Quiz = () => {
                         size="small"
                         onClick={() => {
                             setOpen(false);
-                        }}
-                    >
+                        }}>
                         <CloseIcon fontSize="inherit" />
                     </IconButton>
                 }
-                    sx={{ mb: 2 }}
-                >
+                sx={{ mb: 2 }}>
                     Welcome {name}, Selamat Mengerjakan!
                 </Alert>
-            </Collapse>
-            <Card sx={{ width: '400px' }}>
+            </Collapse> */}
+            <Card sx={{ width: '400px', mt: 2 }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant='h3' sx={{ my: 3 }}>
                         Quiz App
@@ -91,7 +116,7 @@ const Quiz = () => {
                                     {currentIndex >= quizData.length ? (
                                         <div>
                                             <h1>Score: {score * 10}, From: {quizData.length}</h1>
-                                            <h1>Benar: {score}, Salah: {quizData.length - score}</h1>
+                                            <h1>Correct: {score}, Wrong: {quizData.length - score}</h1>
                                             <Button
                                                 type='submit'
                                                 variant='contained'
@@ -103,7 +128,8 @@ const Quiz = () => {
                                         </div>
                                     ) : (
                                         <div>
-                                            <h1>{quizData[currentIndex].category}</h1>
+                                            <h1>Category: {quizData[currentIndex].category}</h1>
+                                            <h2>Question:</h2>
                                             <h2 dangerouslySetInnerHTML={{ __html: quizData[currentIndex].question }} />
                                             <Button
                                                 type='submit'
@@ -136,8 +162,8 @@ const Quiz = () => {
                 variant="outlined"
                 color="error"
                 size='large'
-                sx={{ width: '400px', mt: 1 }}
-                onClick={() => window.location.href = '/'}>
+                sx={{ width: '400px', mt: 1, mb: 2}}
+                onClick={logOut}>
                 Logout
             </Button>
         </Center>
