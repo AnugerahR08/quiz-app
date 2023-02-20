@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Quiz from "./components/Quiz";
 
-
-const App = () => {
+function App() {
   return (
     <Router>
       <Routes>
@@ -13,6 +12,7 @@ const App = () => {
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;
+

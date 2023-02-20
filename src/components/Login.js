@@ -1,19 +1,34 @@
 import React, { useState } from "react";
-import { Button, TextField } from "@mui/material";
 import { Card, CardContent, Typography } from '@mui/material';
+import { Button, TextField } from "@mui/material";
 import { Box } from '@mui/system';
 import Center from './Center';
+import Swal from 'sweetalert2'
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
 
-    const handleLogin = (event) => {
+    const handleEmail = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const handleName = (event) => {
+        setName(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
         event.preventDefault();
-        if (username === "admin" && password === "123") {
-            window.location.href = "/quiz";
+        if (!email || !name){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            })
         } else {
-            alert("Username atau password salah");
+            localStorage.setItem("email", email);
+            localStorage.setItem("name", name);
+            window.location.href = "/quiz";
         }
     };
 
@@ -30,22 +45,23 @@ const Login = () => {
                             width: '90%'
                         }
                     }}>
-                        <form onSubmit={handleLogin}>
+                        <form onSubmit={handleSubmit}>
                             <TextField
-                                label="Username"
+                                label="Email"
+                                type="email"
                                 variant='outlined'
-                                value={username}
-                                onChange={(event) => setUsername(event.target.value)}
+                                value={email}
+                                onChange={handleEmail}
                             />
                             <TextField
-                                label="Password"
-                                type="password"
-                                value={password}
+                                label="Name"
+                                type="text"
                                 variant='outlined'
-                                onChange={(event) => setPassword(event.target.value)}
+                                value={name}
+                                onChange={handleName}
                             />
-                            <Button 
-                                type="submit" 
+                            <Button
+                                type="submit"
                                 variant="contained"
                                 size='large'
                                 sx={{ width: '90%', m: 1 }}>
@@ -60,5 +76,6 @@ const Login = () => {
 };
 
 export default Login;
+
 
 

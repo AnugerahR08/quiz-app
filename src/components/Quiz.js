@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Center from './Center';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Button, Card, CardContent, Typography, Alert, IconButton, Collapse } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { Box } from '@mui/system';
 import axios from "axios";
+import Swal from 'sweetalert2'
 
-function Quiz() {
+const Quiz = () => {
+    const name = localStorage.getItem("name");
     const [quizData, setQuizData] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [timeLeft, setTimeLeft] = useState(60);
+    const [open, setOpen] = React.useState(true);
 
     useEffect(() => {
         axios.get(
@@ -32,7 +36,8 @@ function Quiz() {
     };
 
     const restartQuiz = () => {
-        window.location.reload()
+        window.location.reload();
+        setOpen(true);
         // setTime(300);
     };
 
@@ -51,6 +56,24 @@ function Quiz() {
 
     return (
         <Center>
+            <Collapse in={open}>
+                <Alert action={
+                    <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                            setOpen(false);
+                        }}
+                    >
+                        <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                }
+                    sx={{ mb: 2 }}
+                >
+                    Welcome {name}, Selamat Mengerjakan!
+                </Alert>
+            </Collapse>
             <Card sx={{ width: '400px' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant='h3' sx={{ my: 3 }}>
@@ -62,51 +85,51 @@ function Quiz() {
                             width: '90%'
                         }
                     }}>
+                        <div>
+                            {quizData.length > 0 ? (
+                                <div>
+                                    {currentIndex >= quizData.length ? (
+                                        <div>
+                                            <h1>Score: {score * 10}, From: {quizData.length}</h1>
+                                            <h1>Benar: {score}, Salah: {quizData.length - score}</h1>
+                                            <Button
+                                                type='submit'
+                                                variant='contained'
+                                                size='large'
+                                                sx={{ width: '90%', m: 1 }}
+                                                onClick={restartQuiz}>
+                                                Play Again
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <h1>{quizData[currentIndex].category}</h1>
+                                            <h2 dangerouslySetInnerHTML={{ __html: quizData[currentIndex].question }} />
+                                            <Button
+                                                type='submit'
+                                                variant='contained'
+                                                size='large'
+                                                sx={{ width: '90%', m: 1 }}
+                                                onClick={() => handleAnswer("True")}>
+                                                True
+                                            </Button>
+                                            <Button
+                                                type='submit'
+                                                variant='contained'
+                                                size='large'
+                                                sx={{ width: '90%', m: 1 }}
+                                                onClick={() => handleAnswer("False")}>
+                                                False
+                                            </Button>
+                                            <p>Time left: {timeLeft} seconds</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <h1>Loading...</h1>
+                            )}
+                        </div>
                     </Box>
-                    <div>
-                        {quizData.length > 0 ? (
-                            <div>
-                                {currentIndex >= quizData.length ? (
-                                    <div>
-                                        <h1>Score: {score * 10}, From: {quizData.length}</h1>
-                                        <h1>Benar: {score}, Salah: {quizData.length - score}</h1>
-                                        <Button
-                                            type='submit'
-                                            variant='contained'
-                                            size='large'
-                                            sx={{ width: '90%', m: 1 }}
-                                            onClick={restartQuiz}>
-                                            Play Again
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <h1>{quizData[currentIndex].category}</h1>
-                                        <h2 dangerouslySetInnerHTML={{ __html: quizData[currentIndex].question }} />
-                                        <Button
-                                            type='submit'
-                                            variant='contained'
-                                            size='large'
-                                            sx={{ width: '90%', m: 1 }}
-                                            onClick={() => handleAnswer("True")}>
-                                            True
-                                        </Button>
-                                        <Button
-                                            type='submit'
-                                            variant='contained'
-                                            size='large'
-                                            sx={{ width: '90%', m: 1 }}
-                                            onClick={() => handleAnswer("False")}>
-                                            False
-                                        </Button>
-                                        <p>Time left: {timeLeft} seconds</p>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <h1>Loading...</h1>
-                        )}
-                    </div>
                 </CardContent>
             </Card>
             <Button
