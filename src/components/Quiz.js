@@ -11,7 +11,7 @@ const Quiz = () => {
     const [quizData, setQuizData] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [score, setScore] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(30);
     const [open, setOpen] = React.useState(true);
 
     useEffect(() => {
